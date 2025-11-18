@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>The Blockbuster</title>
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+  <audio id="musicaYenifer" src="media/audioyenifer.mp3" loop hidden></audio>
+
+  <h2 id="saludo"></h2>
+  <div id="cartaYenifer"></div>
+
+  <button id="cerrarSesion">Cerrar sesión</button>
+
+  <h1>The Blockbuster</h1>
+
+  <div class="buscador">
+    <input type="text" id="titulo" placeholder="Escribe el título de una película..." />
+    <button id="buscar">Buscar</button>
+  </div>
+
+  <div id="resultado"></div>
+
+  <h2>Películas Rentadas</h2>
+  <div id="rentas"></div>
+
+  <!-- SCRIPT PRINCIPAL -->
+  <script>
+  (function() {
+    // Leer sesión de forma segura
+    const sesion = JSON.parse(localStorage.getItem("sesion"));
+
+    // Si no hay sesión o no está logueado, redirige al login
+    if (!sesion || !sesion.logueado) {
+      window.location.href = "login.html";
+      return;
+    }
+
+    const saludoEl = document.getElementById("saludo");
+    if (!saludoEl) return;
+
+    const usuario = (sesion.usuario || "").toString();
+
+    if (usuario.toLowerCase() === "yenifer") {
+
+      saludoEl.textContent = "Bonjour mon amour, bienvenue 💕";
+
+      // 🎶 Música para Yenifer
+      const audio = document.getElementById("musicaYenifer");
+      setTimeout(() => {
+        audio.play().catch(() => {
+          console.log("Autoplay bloqueado; sonará tras la primera interacción.");
+        });
+      }, 300);
+
+      // 🌸 FONDO ROMÁNTICO CON DESENFOQUE Y OSCURECIMIENTO
+      const fondo = document.createElement("div");
+      fondo.style.position = "fixed";
+      fondo.style.top = "0";
+      fondo.style.left = "0";
+      fondo.style.width = "100%";
+      fondo.style.height = "100%";
+      fondo.style.backgroundImage = "url('https://w0.peakpx.com/wallpaper/381/488/HD-wallpaper-pepe-le-pew-boat-skunk-cat-hearts.jpg')";
+      fondo.style.backgroundSize = "cover";
+      fondo.style.backgroundPosition = "center";
+      fondo.style.backgroundAttachment = "fixed";
+      fondo.style.filter = "blur(6px)";
+      fondo.style.zIndex = "-1"; // detrás del contenido
+      fondo.style.backgroundColor = "rgba(0,0,0,0.4)"; // overlay negro semi-transparente
+      fondo.style.backgroundBlendMode = "darken"; // mezcla el color con la imagen
+      document.body.appendChild(fondo);
+
+    } else {
+      saludoEl.textContent = "Salut!, " + usuario;
+    }
+
+    // BOTÓN CERRAR SESIÓN
+    const cerrarSesionBtn = document.getElementById("cerrarSesion");
+    const carta = document.getElementById("cartaYenifer");
+
+    cerrarSesionBtn.addEventListener("click", () => {
+      if (usuario.toLowerCase() === "yenifer") {
+        // Mostrar carta romántica
+        carta.innerHTML = `
+          <div style="
+              text-align: center; 
+              padding: 20px; 
+              animation: fadein 1s ease-in-out;
+          ">
+              <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTCirmk_BsNf5UwC40-5kJMal7ri59khliSPw&s" 
+                  alt="Amor" 
+                  style="width: 200px; border-radius: 10px; margin-bottom: 15px;">
+              
+              <h3 style="font-size: 26px; margin: 10px;">À bientôt, chérie… 💕</h3>
+              <p style="font-size: 18px;">Ne pas tarder à revenir, tu me manques</p>
+          </div>
+        `;
+        carta.style.opacity = "1";
+
+        setTimeout(() => {
+          localStorage.removeItem("sesion");
+          window.location.href = "login.html";
+        }, 3000);
+
+      } else {
+        alert("Hasta la vista 👋");
+        localStorage.removeItem("sesion");
+        window.location.href = "login.html";
+      }
+    });
+
+  })();
+  </script>
+
+  <script src="js/script.js"></script>
+</body>
+</html>
